@@ -4075,5 +4075,46 @@
 
         window.onload = initApp;
     </script>
+    <script type="module">
+  // 1. Nhúng thư viện Realtime Database từ CDN
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+  import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+
+  // 2. Cấu hình Firebase của bạn
+  const firebaseConfig = {
+    apiKey: "AIzaSyDa2XiVPGcWvWteRWYtX_wYpzYx6_NhACg",
+    authDomain: "taskflow-pro-dbf94.firebaseapp.com",
+    databaseURL: "https://taskflow-pro-dbf94-default-rtdb.firebaseio.com", // Đường dẫn Realtime DB
+    projectId: "taskflow-pro-dbf94",
+    storageBucket: "taskflow-pro-dbf94.firebasestorage.app",
+    messagingSenderId: "342518893711",
+    appId: "1:342518893711:web:b45afd7e058e0e9474fa",
+    measurementId: "G-2FZR2LQ6PY"
+  };
+
+  // Khởi tạo Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  // Khai báo biến global để các hàm ở thẻ script phía trên của bạn có thể gọi được
+  window.saveDataToFirebase = function(newData) {
+    set(ref(db, 'taskflow_data'), newData)
+      .catch((error) => console.error("Lỗi lưu database:", error));
+  };
+
+  // 3. TỰ ĐỘNG ĐỒNG BỘ REALTIME VỀ MÀN HÌNH
+  // Khi có bất kỳ ai sửa đổi dữ liệu trên mạng, hàm này sẽ tự động kích hoạt
+  onValue(ref(db, 'taskflow_data'), (snapshot) => {
+    const data = snapshot.val();
+    if (data) {
+      // Đưa dữ liệu tải từ mạng về biến local của bạn (Ví dụ biến xử lý của bạn tên là data)
+      // Bạn cần kiểm tra xem biến lưu mảng công việc ở script trên tên là gì và thay thế vào đây:
+      if (typeof initApp === "function") {
+         // Chèn dữ liệu từ mạng vào hệ thống của bạn ở đây trước khi render
+         console.log("Dữ liệu đồng bộ thành công từ Firebase!", data);
+      }
+    }
+  });
+</script>
 </body>
 </html>
