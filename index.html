@@ -4075,5 +4075,48 @@
 
         window.onload = initApp;
     </script>
+    <script type="module">
+  // Nhúng thư viện Firebase dạng Module CDN
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+  import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+  // Cấu hình ứng dụng TaskFlow-Pro của bạn
+  const firebaseConfig = {
+    apiKey: "AIzaSyDa2XiVPGcWvWteRWYtX_wYpzYx6_NhACg",
+    authDomain: "taskflow-pro-dbf94.firebaseapp.com",
+    projectId: "taskflow-pro-dbf94",
+    storageBucket: "taskflow-pro-dbf94.firebasestorage.app",
+    messagingSenderId: "342518893711",
+    appId: "1:342518893711:web:b45afd7e058e0e9474fa",
+    measurementId: "G-2FZR2LQ6PY"
+  };
+
+  // Khởi tạo và đưa biến db ra môi trường toàn cục (window) để code cũ của bạn gọi được
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  window.db = db;
+
+  // LẮNG NGHE DỮ LIỆU ĐỒNG BỘ REALTIME
+  // Hàm này tự động chạy khi có bất kỳ ai thay đổi dữ liệu trên database
+  onSnapshot(doc(db, "dulieu", "duan"), (docSnap) => {
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      
+      // GIẢ SỬ: Code cũ của bạn đang dùng biến tên là `danhSachDuAn` để lưu mảng dữ liệu
+      // và dùng hàm `renderGiaoDien()` để vẽ các dòng công việc lên màn hình.
+      if (typeof renderGiaoDien === "function") {
+         window.danhSachDuAn = data.danhSach || [];
+         renderGiaoDien(); 
+      }
+    }
+  });
+
+  // HÀM ĐỂ BẠN GỌI KHI CÓ AI ĐÓ THAO TÁC THÊM/SỬA/XÓA CÔNG VIỆC
+  window.saveDataToFirebase = async function(newDataArray) {
+     await setDoc(doc(db, "dulieu", "duan"), {
+        danhSach: newDataArray
+     });
+  };
+</script>
 </body>
 </html>
