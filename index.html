@@ -808,28 +808,6 @@
                 <h3 class="font-bold text-lg" id="taskModalTitle">Thêm Công Việc Mới</h3>
                 <button type="button" onclick="closeTaskModal()" class="text-blue-100 hover:text-white transition"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
-            <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyD58lqepEyOo-YevH8KT_AR8N5LCx9oKWQ",
-    authDomain: "kiemh20cgs.firebaseapp.com",
-    projectId: "kiemh20cgs",
-    storageBucket: "kiemh20cgs.firebasestorage.app",
-    messagingSenderId: "761178545059",
-    appId: "1:761178545059:web:f77dac9a5f08f412f7d816",
-    measurementId: "G-EL40R85LZC"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
 </script>
             <form id="taskForm" onsubmit="saveTask(event)" class="p-6 space-y-4">
                 <input type="hidden" id="taskId">
@@ -900,6 +878,27 @@
 
     <!-- MODAL 4: PROPOSAL MODAL (Includes Approver selector) -->
     <div id="proposalModal" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-4">
+       // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyD58lqepEyOo-YevH8KT_AR8N5LCx9oKWQ",
+  authDomain: "kiemh20cgs.firebaseapp.com",
+  projectId: "kiemh20cgs",
+  storageBucket: "kiemh20cgs.firebasestorage.app",
+  messagingSenderId: "761178545059",
+  appId: "1:761178545059:web:f77dac9a5f08f412f7d816",
+  measurementId: "G-EL40R85LZC"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
         <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden transform transition-all border border-gray-150">
             <div class="bg-emerald-600 px-6 py-4 flex justify-between items-center text-white">
                 <h3 class="font-bold text-lg" id="proposalModalTitle">Đề xuất Vật tư & Chi phí</h3>
