@@ -808,6 +808,29 @@
                 <h3 class="font-bold text-lg" id="taskModalTitle">Thêm Công Việc Mới</h3>
                 <button type="button" onclick="closeTaskModal()" class="text-blue-100 hover:text-white transition"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
+            <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyD58lqepEyOo-YevH8KT_AR8N5LCx9oKWQ",
+    authDomain: "kiemh20cgs.firebaseapp.com",
+    projectId: "kiemh20cgs",
+    storageBucket: "kiemh20cgs.firebasestorage.app",
+    messagingSenderId: "761178545059",
+    appId: "1:761178545059:web:f77dac9a5f08f412f7d816",
+    measurementId: "G-EL40R85LZC"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
             <form id="taskForm" onsubmit="saveTask(event)" class="p-6 space-y-4">
                 <input type="hidden" id="taskId">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
