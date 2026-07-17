@@ -808,7 +808,6 @@
                 <h3 class="font-bold text-lg" id="taskModalTitle">Thêm Công Việc Mới</h3>
                 <button type="button" onclick="closeTaskModal()" class="text-blue-100 hover:text-white transition"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
-</script>
             <form id="taskForm" onsubmit="saveTask(event)" class="p-6 space-y-4">
                 <input type="hidden" id="taskId">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -878,27 +877,6 @@
 
     <!-- MODAL 4: PROPOSAL MODAL (Includes Approver selector) -->
     <div id="proposalModal" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-4">
-       // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyD58lqepEyOo-YevH8KT_AR8N5LCx9oKWQ",
-  authDomain: "kiemh20cgs.firebaseapp.com",
-  projectId: "kiemh20cgs",
-  storageBucket: "kiemh20cgs.firebasestorage.app",
-  messagingSenderId: "761178545059",
-  appId: "1:761178545059:web:f77dac9a5f08f412f7d816",
-  measurementId: "G-EL40R85LZC"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
         <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden transform transition-all border border-gray-150">
             <div class="bg-emerald-600 px-6 py-4 flex justify-between items-center text-white">
                 <h3 class="font-bold text-lg" id="proposalModalTitle">Đề xuất Vật tư & Chi phí</h3>
@@ -1181,6 +1159,7 @@ const analytics = getAnalytics(app);
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
 
         // Global variables initialized
         window.currentUserId = localStorage.getItem('tf_current_user_id') || 'p1';
@@ -1208,39 +1187,52 @@ const analytics = getAnalytics(app);
         window.taskComments = JSON.parse(localStorage.getItem('tf_task_comments')) || {};
 
         // FIREBASE SETUP WITH STRICT CRITICAL RULES
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'h2o-cgs-taskflow';
+        const firebaseConfig = {
+            apiKey: "AIzaSyD58lqepEyOo-YevH8KT_AR8N5LCx9oKWQ",
+            authDomain: "kiemh20cgs.firebaseapp.com",
+            projectId: "kiemh20cgs",
+            storageBucket: "kiemh20cgs.firebasestorage.app",
+            messagingSenderId: "761178545059",
+            appId: "1:761178545059:web:f77dac9a5f08f412f7d816",
+            measurementId: "G-EL40R85LZC"
+        };
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'kiemh20cgs';
         let db = null;
         let auth = null;
+        let analytics = null;
         let isCloudConnected = false;
 
         async function initFirebaseAndAuth() {
             const statusEl = document.getElementById('sync-status-indicator');
             try {
-                if (typeof __firebase_config !== 'undefined') {
-                    const firebaseConfig = JSON.parse(__firebase_config);
-                    const app = initializeApp(firebaseConfig);
-                    db = getFirestore(app);
-                    auth = getAuth(app);
-
-                    // Auth Rule 3 Priority Token
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-
-                    isCloudConnected = true;
-                    if (statusEl) {
-                        statusEl.className = "flex items-center gap-1.5 text-xs font-bold text-green-500";
-                        statusEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span><span>Trực tuyến</span>`;
-                    }
-                    showToast("Đã đồng bộ hóa dữ liệu đám mây!", "success");
-
-                    // Start Real-time onSnapshot loops
-                    startSyncingCollections();
-                } else {
-                    throw new Error("No config present");
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                
+                // Initialize analytics safely (helps avoid blocks from adblockers)
+                try {
+                    analytics = getAnalytics(app);
+                } catch (analyticsErr) {
+                    console.warn("Google Analytics failed to load (likely blocked by browser):", analyticsErr);
                 }
+
+                // Auth Rule 3 Priority Token
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                isCloudConnected = true;
+                if (statusEl) {
+                    statusEl.className = "flex items-center gap-1.5 text-xs font-bold text-green-500";
+                    statusEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span><span>Đã kết nối Cloud</span>`;
+                }
+                showToast("Đã đồng bộ hóa thành công dữ liệu đám mây kiemh20cgs!", "success");
+
+                // Start Real-time onSnapshot loops
+                startSyncingCollections();
             } catch (err) {
                 console.warn("Chạy ở chế độ Ngoại tuyến (Được lưu trữ an toàn trong Trình duyệt):", err);
                 if (statusEl) {
